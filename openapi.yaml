@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: ClickPrint API Specification
+
+servers:
+  - url: https://cp-server.wckd.pk/api
+
+tags:
+  - name: auth
+    description: Everything related to authentication.
+
+paths:
+  /auth/otp:
+    post:
+      tags:
+        - auth
+      summary: Send an OTP
+      description: |-
+        Send an OTP to the provided phone number via WhatsApp.
+
+        Phone numbers must be in E.164 format, without the plus. (example: `923001234567`)
+
+        For security purposes, the endpoint will respond with `200 OK` even if the phone number is invalid.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneNumber:
+                  type: string
+                  example: "923001234567"
+              required:
+                - phoneNumber
+      responses:
+        '200':
+          description: Sucessfully sent OTP via WhatsApp.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
+        '429':
+          description: Too many requests. Try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
+        '502':
+          description: Failed to send OTP. Try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
+
+  /auth/verify:
+    post:
+      tags:
+        - auth
+      summary: Verify an OTP
+      description: |-
+        Verify an OTP against a phone number.
+
+        If the OTP is valid, a JWT authentication token will be returned.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otpCode:
+                  type: string
+                  example: "123456"
+                phoneNumber:
+                  type: string
+                  example: "923001234567"
+              required:
+                - otpCode
+                - phoneNumber
+      responses:
+        '200':
+          description: OTP verification successful. Authentication token returned.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseWrapper'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          token:
+                            type: string
+                            example: eyJhbGciOiJIUzI1NiR5cCI6IkpXVCJ9...
+                        required:
+                          - token
+        '401':
+          description: Invalid or expired OTP.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
+        '429':
+          description: Too many requests. Try again later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
+
+components:
+  schemas:
+    ResponseWrapper:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+      required:
+        - success
+        - message
+        - data
