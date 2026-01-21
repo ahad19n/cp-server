@@ -1,28 +1,29 @@
 const jwt = require('jsonwebtoken');
+
 const Otp = require('../models/Otp.model');
 const User = require('../models/User.model');
+
 const { resp, isValidE164NoPlus, generateOtpCode } = require('../helpers');
 
 // -------------------------------------------------------------------------- //
 
 exports.generateOtp = async (req, res) => {
-  const { phoneNumber } = req.body;
+  const { number } = req.body;
 
-  if (!phoneNumber) return resp(res, 400, 'phoneNumber is required');
-  if (!isValidE164NoPlus(phoneNumber)) return resp(res, 400, 'phoneNumber is not valid');
+  if (!number) return resp(res, 400, 'Missing or empty fields (number).');
+  if (!isValidE164NoPlus(phoneNumber)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
 
-  const otpCode = generateOtpCode(6);
-  await OtpCodeModel.deleteMany({ phoneNumber });
+  try {
+    const code = generateOtpCode(6);
+    await Otp.create({ code, number,expiry: new Date(Date.now() + 5 * 60 * 1000) });
+  }
+  catch (err) {
+    if (err.code === 11000) return resp(res, 429, 'Too many requests. Try again later.');
+    else throw err;
+  }
 
-  await OtpCodeModel.create({
-    otpCode, phoneNumber,
-    expiresAt: new Date(Date.now() + 5 * 60 * 1000)
-  });
-
-  // TODO: send code via whatsapp
-  console.log(`[DEV] Generated otpCode ${otpCode} for phoneNumber ${phoneNumber}`);
-
-  resp(res, 200, 'Sucessfully sent OTP via WhatsApp');
+  // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
+  resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
 };
 
 // -------------------------------------------------------------------------- //
@@ -31,18 +32,20 @@ exports.verifyOtp = async (req, res) => {
   const { code, number } = req.body;
 
   if (!code || !number) {
-    return resp(res, 400, 'Missing or empty fields (code, number)');
+    return resp(res, 400, 'Missing or empty fields (code, number).');
   }
 
   const otp = await Otp.findOne({ number });
 
-  if (!otp || otp.code !== code) {
-    return resp(res, 401, 'Invalid or expired OTP');
+  if (!otp) return resp(res, 401, 'Invalid or expired OTP.');
+  if (otp.tries <= 0) return resp(res, 429, 'Too many requests. Try again later.');
+
+  if (otp.code != code) {
+    otp.tries -= 1;
+    await otp.save();
+    return resp(res, 401, 'Invalid or expired OTP.');
   }
 
-  await Otp.deleteOne({ number });
-  await User.updateOne({ number }, { isVerified: true });
-
-  const user = User.findOne({ number });
-
+  await Otp.deleteOne({ _id: otp._id });
+  resp(res, 200, 'OTP verified');
 };

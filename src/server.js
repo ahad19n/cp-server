@@ -22,7 +22,7 @@ if (!process.env.MONGODB_URI) {
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('[INFO] Successfully connected to MongoDB'))
-  .catch((err) => {
+  .catch(err => {
     console.error('[ERROR] Failed to connect to MongoDB:', err);
     process.exit(1);
   });
