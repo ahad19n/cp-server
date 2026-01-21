@@ -11,14 +11,15 @@ exports.generateOtp = async (req, res) => {
   const { number } = req.body;
 
   if (!number) return resp(res, 400, 'Missing or empty fields (number).');
-  if (!isValidE164NoPlus(phoneNumber)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
+  if (!isValidE164NoPlus(number)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
 
   try {
     const code = generateOtpCode(6);
-    await Otp.create({ code, number,expiry: new Date(Date.now() + 5 * 60 * 1000) });
+    await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 2 * 60 * 1000) });
   }
   catch (err) {
-    if (err.code === 11000) return resp(res, 429, 'Too many requests. Try again later.');
+    if (err.code === 11000)
+      return resp(res, 429, 'Too many requests. Try again later.');
     else throw err;
   }
 
