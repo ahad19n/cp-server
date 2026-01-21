@@ -29,11 +29,11 @@ paths:
             schema:
               type: object
               properties:
-                phoneNumber:
+                number:
                   type: string
                   example: "923001234567"
               required:
-                - phoneNumber
+                - number
       responses:
         '200':
           description: Sucessfully sent OTP via WhatsApp.
@@ -70,15 +70,15 @@ paths:
             schema:
               type: object
               properties:
-                otpCode:
+                code:
                   type: string
                   example: "123456"
-                phoneNumber:
+                number:
                   type: string
                   example: "923001234567"
               required:
-                - otpCode
-                - phoneNumber
+                - code
+                - number
       responses:
         '200':
           description: OTP verification successful. Authentication token returned.
