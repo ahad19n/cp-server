@@ -15,10 +15,16 @@ app.use(morgan('combined'));
 
 // -------------------------------------------------------------------------- //
 
-if (!process.env.MONGODB_URI) {
-  console.error('[ERROR] MONGODB_URI environment variable is required');
-  process.exit(1);
+const required = ['JWT_SECRET', 'MONGODB_URI'];
+
+for (const v of required) {
+  if (!process.env[v]) {
+    console.error(`[ERROR] ${v} environment variable is required`);
+    process.exit(1);
+  }
 }
+
+// -------------------------------------------------------------------------- //
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('[INFO] Successfully connected to MongoDB'))
@@ -46,28 +52,8 @@ app.use('/api', require('./routes/index.routes'));
 
 // -------------------------------------------------------------------------- //
 
-const gracefulShutdown = async (server) => {
-  try {
-    console.log('[INFO] Attempting to gracefully shut down server');
-
-    await new Promise((resolve, reject) => {
-      server.close((err) => (err ? reject(err) : resolve()));
-    });
-    console.log('[INFO] Successfully shutdown server');
-
-    await mongoose.connection.close();
-    console.log('[INFO] Successfully closed MongoDB connection');
-
-    process.exit(0);
-  } catch (err) {
-    console.error('[ERROR] Error during server shutdown:', err);
-    process.exit(1);
-  }
-};
-
-const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => {
-  console.log('[INFO] Server listening on port', PORT);
+const server = app.listen(process.env.PORT || 3000, () => {
+  console.log('[INFO] Server listening on port', process.env.PORT || 3000);
 });
 
 process.on('SIGINT', () => gracefulShutdown(server));
