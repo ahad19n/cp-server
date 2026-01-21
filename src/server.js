@@ -2,6 +2,8 @@ const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 
+const { resp, gracefulShutdown } = require('./helpers');
+
 // -------------------------------------------------------------------------- //
 
 const app = express();
@@ -49,6 +51,13 @@ app.get('/health', async (req, res) => {
 // -------------------------------------------------------------------------- //
 
 app.use('/api', require('./routes/index.routes'));
+
+// -------------------------------------------------------------------------- //
+
+app.use((err, req, res, next) => {
+  console.error('[ERROR]', err);
+  resp(res, 500, 'Internal Server Error');
+});
 
 // -------------------------------------------------------------------------- //
 
