@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 
 const { generateOtp, verifyOtp } = require('../controllers/Auth.controller');
 

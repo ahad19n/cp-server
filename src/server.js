@@ -1,6 +1,9 @@
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const { resp, gracefulShutdown } = require('./helpers');
 
