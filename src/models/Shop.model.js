@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
-const shopSchema = new mongoose.Schema({
-	id: {
-		type: Number,
-		required: true,
-		unique: true,
-	},
+module.exports = mongoose.model("Shop", new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
@@ -17,11 +12,5 @@ const shopSchema = new mongoose.Schema({
 	capabilities: {
 		type: [String],
 		required: true,
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now,
-	},
-});
-
-module.exports = mongoose.model("Shop", shopSchema);
+	}
+}, {timestamps: true}));
