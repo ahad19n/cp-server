@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');  
 const { randomInt } = require('crypto');
 
 exports.isValidE164NoPlus = (number) => {
