@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const { getUserHistory } = require('../controllers/History.controller');
+
 // -------------------------------------------------------------------------- //
 
-router.use('/auth', require('./Auth.routes'));
-router.use('/shops', require('./Shop.routes'));
-router.use('/history', require('./History.routes'));
+router.get('/', getUserHistory);
 
 // -------------------------------------------------------------------------- //
 

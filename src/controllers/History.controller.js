@@ -1,6 +1,8 @@
-const Transaction = require('../models/Transaction.model');
+const History = require('../models/History.model');
 
-exports.getTransactions = async (req, res) => {
+// -------------------------------------------------------------------------- //
+
+exports.getUserHistory = async (req, res) => {
   try {
     const { 
       dateFrom, 
