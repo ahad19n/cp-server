@@ -24,6 +24,17 @@ exports.generateOtp = async (req, res) => {
   }
 
   // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
+  await fetch(`${process.env.WAGW_URL}/send`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      number,
+      message: `[ClickPrint] Your OTP is ${code}`,
+    })
+  });
+
   resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
 };
 
