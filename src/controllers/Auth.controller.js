@@ -62,5 +62,8 @@ exports.verifyOtp = async (req, res) => {
   }
 
   await Otp.deleteOne({ _id: otp._id });
-  resp(res, 200, 'OTP verified');
+  await User.create({ name: "", number });
+
+  const token = jwt.sign({ number }, process.env.JWT_SECRET);
+  return resp(res, 200, 'Successfully verified OTP', { token });
 };
