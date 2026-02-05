@@ -14,8 +14,8 @@ exports.generateOtp = async (req, res) => {
   if (!isValidE164NoPlus(number)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
 
   try {
-    const code = generateOtpCode(6);
-    await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 0.5 * 60 * 1000) });
+    const code = generateOtpCode(5);
+    await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 1 * 60 * 1000) });
 
     // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
     const response = await fetch(`${process.env.WAGW_URL}/send`, {
