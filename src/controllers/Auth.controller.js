@@ -29,7 +29,8 @@ exports.generateOtp = async (req, res) => {
       })
     });
 
-    console.log(response.body);
+    const body = await response.json();
+    console.log(body);
 
     resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
   }
