@@ -18,7 +18,7 @@ exports.generateOtp = async (req, res) => {
     await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 0.5 * 60 * 1000) });
 
     // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
-    await fetch(`${process.env.WAGW_URL}/send`, {
+    const response = await fetch(`${process.env.WAGW_URL}/send`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -28,6 +28,8 @@ exports.generateOtp = async (req, res) => {
         message: `[ClickPrint] Your OTP is ${code}`,
       })
     });
+
+    console.log(response.body);
 
     resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
   }
