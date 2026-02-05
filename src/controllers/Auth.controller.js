@@ -16,26 +16,26 @@ exports.generateOtp = async (req, res) => {
   try {
     const code = generateOtpCode(6);
     await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 2 * 60 * 1000) });
+
+    // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
+    await fetch(`${process.env.WAGW_URL}/send`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        number,
+        message: `[ClickPrint] Your OTP is ${code}`,
+      })
+    });
+
+    resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
   }
   catch (err) {
     if (err.code === 11000)
       return resp(res, 429, 'Too many requests. Try again later.');
     else throw err;
   }
-
-  // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
-  await fetch(`${process.env.WAGW_URL}/send`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      number,
-      message: `[ClickPrint] Your OTP is ${code}`,
-    })
-  });
-
-  resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
 };
 
 // -------------------------------------------------------------------------- //
