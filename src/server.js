@@ -17,7 +17,7 @@ app.use(morgan('combined'));
 
 // -------------------------------------------------------------------------- //
 
-const required = ['JWT_SECRET', 'MONGODB_URI'];
+const required = ['WAGW_URL', 'JWT_SECRET', 'MONGODB_URI'];
 
 for (const v of required) {
   if (!process.env[v]) {
