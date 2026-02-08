@@ -117,7 +117,27 @@ paths:
       tags:
         - profile
       summary: Details about the currently logged in user's profile
-
+    patch:
+      tags:
+        - profile
+      summary: Allow the currently logged in user to edit their profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+      responses:
+        '200':
+          description: User profile edited sucessfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseWrapper'
 
 components:
   schemas:
