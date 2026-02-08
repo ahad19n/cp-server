@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  version: 1.0.0
+  version: 0.0.1
   title: ClickPrint API Specification
 
 servers:
@@ -8,9 +8,7 @@ servers:
 
 tags:
   - name: auth
-    description: Everything related to authentication.
   - name: profile
-    description: Everything related to a users profile.
 
 paths:
   /auth/otp:
@@ -124,8 +122,6 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/ResponseWrapper'
                   - type: object
-                    required:
-                      - data
                     properties:
                       data:
                         type: object
@@ -133,17 +129,7 @@ paths:
                           - profile
                         properties:
                           profile:
-                            type: object
-                            required:
-                              - name
-                              - number
-                            properties:
-                              name:
-                                type: string
-                                example: John Doe
-                              number:
-                                type: string
-                                example: 923001234567
+                            $ref: '#/components/schemas/UserProfile'
     patch:
       tags:
         - profile
