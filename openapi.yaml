@@ -116,7 +116,29 @@ paths:
     get:
       tags:
         - profile
-      summary: Details about the currently logged in user's profile
+      summary: Fetch details about the currently logged in user's profile
+      responses:
+        '200':
+          description: Fetched user profile successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ResponseWrapper'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          profile:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                                example: John Doe
+                              number:
+                                type: string
+                                example: 923001234567
     patch:
       tags:
         - profile
@@ -133,7 +155,7 @@ paths:
                   example: John Doe
       responses:
         '200':
-          description: User profile edited sucessfully
+          description: User profile edited successfully
           content:
             application/json:
               schema:
