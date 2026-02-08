@@ -55,7 +55,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseWrapper'
-
   /auth/verify:
     post:
       tags:
@@ -111,7 +110,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseWrapper'
-
   /profile:
     get:
       tags:
@@ -126,12 +124,19 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/ResponseWrapper'
                   - type: object
+                    required:
+                      - data
                     properties:
                       data:
                         type: object
+                        required:
+                          - profile
                         properties:
                           profile:
                             type: object
+                            required:
+                              - name
+                              - number
                             properties:
                               name:
                                 type: string
@@ -149,22 +154,37 @@ paths:
           application/json:
             schema:
               type: object
+              minProperties: 1
               properties:
                 name:
                   type: string
                   example: John Doe
       responses:
         '200':
-          description: User profile edited successfully
+          description: Edited user profile successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ResponseWrapper'
+                allOf:
+                  - $ref: '#/components/schemas/ResponseWrapper'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        required:
+                          - profile
+                        properties:
+                          profile:
+                            $ref: '#/components/schemas/UserProfile'
 
 components:
   schemas:
     ResponseWrapper:
       type: object
+      required:
+        - success
+        - message
+        - data
       properties:
         success:
           type: boolean
@@ -172,7 +192,15 @@ components:
           type: string
         data:
           type: object
+    UserProfile:
+      type: object
       required:
-        - success
-        - message
-        - data
+        - name
+        - number
+      properties:
+        name:
+          type: string
+          example: John Doe
+        number:
+          type: string
+          example: 923001234567
