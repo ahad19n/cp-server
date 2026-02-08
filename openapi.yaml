@@ -9,6 +9,8 @@ servers:
 tags:
   - name: auth
     description: Everything related to authentication.
+  - name: profile
+    description: Everything related to a users profile.
 
 paths:
   /auth/otp:
@@ -109,6 +111,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseWrapper'
+
+  /profile:
+    get:
+      tags:
+        - profile
+      summary: Details about the currently logged in user's profile
+
 
 components:
   schemas:
