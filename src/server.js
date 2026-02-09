@@ -14,7 +14,7 @@ app.set('trust proxy', true);
 
 app.use(express.json());
 app.use(morgan('combined'), {
-  skip: (req, res) => req.path === '/health'
+  // skip: (req, res) => req.path === '/health'
 });
 
 // -------------------------------------------------------------------------- //
