@@ -5,20 +5,22 @@ const User = require('../models/User.model');
 
 const { resp, isValidE164NoPlus, generateOtpCode } = require('../func');
 
-// -------------------------------------------------------------------------- //
-
 exports.generateOtp = async (req, res) => {
   const { number } = req.body || {};
 
-  if (!number) return resp(res, 400, 'Missing or empty fields (number).');
-  if (!isValidE164NoPlus(number)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
+  if (!number) return resp(res, 400, 'Missing or empty fields (number)');
+  if (!isValidE164NoPlus(number)) return resp(res, 400, `Field 'number' is not valid E164 (no plus)`);
 
   try {
     const code = generateOtpCode(5);
-    await Otp.create({ code, number, tries: 3, expiry: new Date(Date.now() + 1 * 60 * 1000) });
+    await Otp.create({
+      code,
+      number,
+      tries: 3,
+      expiry: new Date(Date.now() + 1 * 60 * 1000)
+    });
 
-    // TODO: Send code via WhatsApp; 502 Failed to send OTP. Try again later.
-    const response = await fetch(process.env.WAGW_SEND_URL, {
+    await fetch(process.env.WAGW_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,19 +31,15 @@ exports.generateOtp = async (req, res) => {
       })
     });
 
-    const body = await response.json();
-    console.log(body);
-
-    resp(res, 200, 'Sucessfully sent OTP via WhatsApp.');
+    return resp(res, 200, 'Sucessfully sent OTP via WhatsApp');
   }
+
   catch (err) {
     if (err.code === 11000)
-      return resp(res, 429, 'Too many requests. Try again later.');
+      return resp(res, 429, 'Too many requests');
     else throw err;
   }
 };
-
-// -------------------------------------------------------------------------- //
 
 exports.verifyOtp = async (req, res) => {
   const { code, number } = req.body || {};
