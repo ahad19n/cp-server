@@ -10,7 +10,7 @@ exports.updateUserProfile = async (req, res) => {
     const { name } = req.body || {};
     if (!name) return resp(res, 400, 'Missing or empty fields (name)');
 
-    const user = await User.findOne({ number: req.token.number });
+    const user = await User.findOne({ number: req.token.number }, { _id: 0 });
     user.name = name;
     user.save();
 
