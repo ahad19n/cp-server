@@ -8,6 +8,7 @@ servers:
 
 tags:
   - name: auth
+  - name: files
   - name: profile
 
 paths:
@@ -108,6 +109,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResponseWrapper'
+  /files:
+    head:
+      tags:
+        - files
   /profile:
     get:
       tags:
