@@ -8,7 +8,7 @@ const { resp, isValidE164NoPlus, generateOtpCode } = require('../func');
 // -------------------------------------------------------------------------- //
 
 exports.generateOtp = async (req, res) => {
-  const { number } = req.body;
+  const { number } = req.body || {};
 
   if (!number) return resp(res, 400, 'Missing or empty fields (number).');
   if (!isValidE164NoPlus(number)) return resp(res, 400, `Field 'number' is not valid E164 (no plus).`);
@@ -44,7 +44,7 @@ exports.generateOtp = async (req, res) => {
 // -------------------------------------------------------------------------- //
 
 exports.verifyOtp = async (req, res) => {
-  const { code, number } = req.body;
+  const { code, number } = req.body || {};
 
   if (!code || !number) {
     return resp(res, 400, 'Missing or empty fields (code, number).');
