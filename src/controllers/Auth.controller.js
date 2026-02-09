@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const Otp = require('../models/Otp.model');
 const User = require('../models/User.model');
 
-const { resp, isValidE164NoPlus, generateOtpCode } = require('../helpers');
+const { resp, isValidE164NoPlus, generateOtpCode } = require('../func');
 
 // -------------------------------------------------------------------------- //
 
