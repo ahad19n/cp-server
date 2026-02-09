@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { updateUserProfile } = require('../controllers/User.controller'); 
+
+const { fetchUserProfile, updateUserProfile } = require('../controllers/Profile.controller'); 
 
 // -------------------------------------------------------------------------- //
 
+router.get('/', fetchUserProfile);
 router.patch('/', updateUserProfile);
 
 // -------------------------------------------------------------------------- //

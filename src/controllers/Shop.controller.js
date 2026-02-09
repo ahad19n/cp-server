@@ -1,4 +1,4 @@
-const { resp } = require('../helpers');
+const { resp } = require('../func');
 const Shop = require("../models/Shop.model");
 
 // -------------------------------------------------------------------------- //
