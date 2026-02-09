@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { resp } = require('../func');
 
-// -------------------------------------------------------------------------- //
-
-exports.verifyToken = (req, res, next) => {
+module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
