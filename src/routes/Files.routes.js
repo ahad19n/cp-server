@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 
-const { uploadFile, downloadFile, checkIfFileExists } = require('../controllers/Files.controller');
+const { handleIncomingFile } = require('../middlewares/Files.middleware');
+const { downloadFile, checkIfFileExists, processFileUpload } = require('../controllers/Files.controller');
 
 // -------------------------------------------------------------------------- //
 
-router.post('/', uploadFile);
 router.get('/:hash', downloadFile);
 router.head('/:hash', checkIfFileExists);
+router.post('/', handleIncomingFile, processFileUpload);
 
 // -------------------------------------------------------------------------- //
 
