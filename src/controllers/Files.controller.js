@@ -4,10 +4,14 @@ const crypto = require('crypto');
 
 // -------------------------------------------------------------------------- //
 
-exports.processFileUpload = async (req, res) => {
+exports.downloadFile = async (req, res) => {
 
-}
+};
 
 exports.checkIfFileExists = async (req, res) => {
+
+};
+
+exports.processFileUpload = async (req, res) => {
 
 };
