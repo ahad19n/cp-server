@@ -2,7 +2,7 @@ const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { resp, gracefulShutdown } = require('./helpers');
+const { resp, gracefulShutdown } = require('./func');
 
 // -------------------------------------------------------------------------- //
 
