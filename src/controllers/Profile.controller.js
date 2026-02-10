@@ -12,7 +12,7 @@ exports.updateUserProfile = async (req, res) => {
 
   const user = await User.findOne({ number: req.token.number }, { _id: 0 });
   user.name = name;
-  user.save();
+  await user.save();
 
   return resp(res, 200, 'Updated user profile successfully', { profile: user });
 };
