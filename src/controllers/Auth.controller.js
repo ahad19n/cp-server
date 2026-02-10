@@ -62,12 +62,15 @@ exports.verifyOtp = async (req, res) => {
   await Otp.deleteOne({ _id: otp._id });
 
   // Create user if not exists
-  await User.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     { number },
     { $setOnInsert: { number } },
     { upsert: true, new: true }
   );
 
   const token = jwt.sign({ number }, process.env.JWT_SECRET);
-  return resp(res, 200, 'Successfully verified OTP', { token });
+  return resp(res, 200, 'Successfully verified OTP', {
+    token,
+    profile: user
+  });
 };
