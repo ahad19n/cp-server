@@ -20,7 +20,7 @@ exports.generateOtp = async (req, res) => {
       expiry: new Date(Date.now() + 1 * 60 * 1000)
     });
 
-    await fetch(process.env.WAGW_URL, {
+    await fetch(process.env.NOTIFYBOT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

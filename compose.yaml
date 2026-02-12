@@ -1,0 +1,33 @@
+services:
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dev
+      MONGO_INITDB_ROOT_PASSWORD: dev
+
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      ME_CONFIG_BASICAUTH: false
+      ME_CONFIG_MONGODB_URL: mongodb://dev:dev@mongo
+
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: unless-stopped
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      API_KEY: ${API_KEY} 
+      JWT_SECRET: ${JWT_SECRET}
+      NOTIFYBOT_URL: ${NOTIFYBOT_URL}
+      GOTENBERG_URL: http://gotenberg:3000
+      GOTENBERG_WEBHOOK_URL: http://app:3000
+      MONGODB_URI: mongodb://dev:dev@mongo/ClickPrint?authSource=admin

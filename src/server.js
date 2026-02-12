@@ -19,7 +19,11 @@ app.use(morgan('combined', {
 
 // -------------------------------------------------------------------------- //
 
-const required = ['WAGW_URL', 'JWT_SECRET', 'MONGODB_URI'];
+const required = [
+  'API_KEY', 'JWT_SECRET',
+  'MONGODB_URI', 'NOTIFYBOT_URL',
+  'GOTENBERG_URL', 'GOTENBERG_WEBHOOK_URL'
+];
 
 for (const v of required) {
   if (!process.env[v]) {

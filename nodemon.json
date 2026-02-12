@@ -1,5 +1,5 @@
 {
     "ext": "js,ejs",
     "watch": ["src/**/*"],
-    "exec": "node --env-file-if-exists=.env src/server.js"
+    "exec": "docker compose build && docker compose up -d && docker compose logs -f app"
 }

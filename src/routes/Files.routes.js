@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
+const verifyAuth = require('../middlewares/verifyAuth');
 const { handleFile } = require('../middlewares/handleFile');
-const { downloadFile, checkIfFileExists, processFileUpload } = require('../controllers/Files.controller');
+const { downloadFile, uploadFile, getFileStatus, updateFile } = require('../controllers/Files.controller');
 
-router.head('/:hash', checkIfFileExists);
-router.post('/', handleFile, processFileUpload);
+// -------------------------------------------------------------------------- //
+
 router.get('/:hash', downloadFile);
+router.post('/', handleFile, uploadFile);
+router.get('/:hash/status', getFileStatus);
+router.post('/:hash/update', verifyAuth({ type: 'key' }), updateFile);
+
+// -------------------------------------------------------------------------- //
 
 module.exports = router;
